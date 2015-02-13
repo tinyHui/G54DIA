@@ -13,10 +13,8 @@ import uk.ac.nott.cs.g54dia.library.*;
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 public class DemoTanker extends Tanker {
-	
     public DemoTanker() { }
 
- 
     /*
      * The following is a very simple demonstration of how to write a tanker. The
      * code below is very stupid and pretty much randomly picks actions to
@@ -25,7 +23,6 @@ public class DemoTanker extends Tanker {
      */
     public Action senseAndAct(Cell[][] view, long timestep) {
  
-      	
     	// If fuel tank is low and not at the fuel pump then move towards the fuel pump
         if ((getFuelLevel() < (MAX_FUEL/2)+5) && !(getCurrentCell(view) instanceof FuelPump)) {
             return new MoveTowardsAction(FUEL_PUMP_LOCATION);

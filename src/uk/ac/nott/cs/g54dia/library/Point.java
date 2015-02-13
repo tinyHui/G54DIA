@@ -19,6 +19,7 @@ public class Point implements Cloneable {
     Point(int x, int y) {
         this.x = x;
         this.y = y;
+
     }
 
     public boolean equals(Object o) {
@@ -41,6 +42,14 @@ public class Point implements Cloneable {
      */
     public int hashCode() {
         return (((x & 0xff) << 16) + (y & 0xff));
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }
 
