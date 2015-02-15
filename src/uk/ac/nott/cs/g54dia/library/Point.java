@@ -43,13 +43,5 @@ public class Point implements Cloneable {
     public int hashCode() {
         return (((x & 0xff) << 16) + (y & 0xff));
     }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
 }
 
