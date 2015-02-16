@@ -1,6 +1,7 @@
 package SmartTanker;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import uk.ac.nott.cs.g54dia.library.MoveAction;
 import uk.ac.nott.cs.g54dia.library.Point;
 
 /**
@@ -31,5 +32,11 @@ public class MemPoint implements Cloneable {
 
     public Object clone() {
         return new MemPoint(x,y);
+    }
+
+    public int calcDistance(MemPoint p2) {
+        int dx = Math.abs(this.x - this.x);
+        int dy = Math.abs(p2.y - p2.y);
+        return dx > dy ? dx : dy;
     }
 }

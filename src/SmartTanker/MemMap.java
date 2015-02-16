@@ -1,5 +1,6 @@
 package SmartTanker;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import uk.ac.nott.cs.g54dia.library.Cell;
 import uk.ac.nott.cs.g54dia.library.Station;
 import uk.ac.nott.cs.g54dia.library.Task;
@@ -13,62 +14,42 @@ import java.util.HashMap;
  * Created by JasonChen on 2/15/15.
  */
 public class MemMap {
-    Map<MemPoint, Station> stations = new HashMap<MemPoint, Station>();
-    Map<MemPoint, Well> wells = new HashMap<MemPoint, Well>();
+    Map<MemPoint, Station> station_list = new HashMap<MemPoint, Station>();
+    Map<MemPoint, Well> well_list = new HashMap<MemPoint, Well>();
 
     public void appendStation(MemPoint p, Station s) {
-        Iterator it = stations.entrySet().iterator();
+        Iterator it = station_list.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
             MemPoint p_r = (MemPoint) pairs.getKey();
-            if (p_r.x == p.x && p_r.y == p.y) {
+            if (p_r.equals(p)) {
                 it.remove();
             }
         }
-        this.stations.put(p, s);
+        this.station_list.put(p, s);
     }
 
     public void appendWell(MemPoint p, Well w) {
-        Iterator it = stations.entrySet().iterator();
+        Iterator it = this.station_list.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
             MemPoint p_r = (MemPoint) pairs.getKey();
-            if (p_r.x == p.x && p_r.y == p.y) {
+            if (p_r.equals(p)) {
                 it.remove();
             }
         }
-        this.wells.put(p, w);
-    }
-
-    public MemPoint getNearestStation(MemPoint current) {
-        int min_distance = 100;
-        int distance;
-        MemPoint station = null;
-        Iterator it = stations.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            MemPoint p_r = (MemPoint) pairs.getKey();
-            Task t = ((Station) pairs.getValue()).getTask();
-            if (t != null) {
-                distance = calcDistance(p_r, current);
-                if (distance < min_distance) {
-                    min_distance = distance;
-                    station = p_r;
-                }
-            }
-        }
-        return station;
+        this.well_list.put((MemPoint) p.clone(), w);
     }
 
     public MemPoint getNearestWell(MemPoint current) {
         int min_distance = 100;
         int distance;
         MemPoint well = null;
-        Iterator it = wells.entrySet().iterator();
+        Iterator it = this.well_list.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
             MemPoint p_r = (MemPoint) pairs.getKey();
-            distance = calcDistance(p_r, current);
+            distance = p_r.calcDistance(current);
             if (distance < min_distance) {
                 min_distance = distance;
                 well = p_r;
@@ -78,21 +59,36 @@ public class MemMap {
     }
 
     public Cell getCell(MemPoint p) {
-        Iterator it = stations.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
+        Iterator it_s = this.station_list.entrySet().iterator();
+        while (it_s.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it_s.next();
             MemPoint p_r = (MemPoint) pairs.getKey();
             if (p_r.x == p.x && p_r.y == p.y) {
                 return (Cell) pairs.getValue();
             }
         }
-        return null;
+
+        Iterator it_w = this.well_list.entrySet().iterator();
+        while (it_w.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it_w.next();
+            MemPoint p_r = (MemPoint) pairs.getKey();
+            if (p_r.x == p.x && p_r.y == p.y) {
+                return (Cell) pairs.getValue();
+            }
+        }
+
+        throw new ValueException("Neither station nor well found on that point");
     }
 
-    public int calcDistance(MemPoint p1, MemPoint p2) {
-        int dx = Math.abs(p1.x - p2.x);
-        int dy = Math.abs(p2.y - p2.y);
-        return dx > dy ? dx : dy;
+    public MemPoint nearerPoint(MemPoint p, MemPoint p1, MemPoint p2) {
+        if (p1 == null) {
+            return p2;
+        } else if (p2 == null) {
+            return p1;
+        }
+        int d1 = p.calcDistance(p1);
+        int d2 = p.calcDistance(p2);
+        return d1 > d2 ? p2 : p1;
     }
 
 }

@@ -9,41 +9,68 @@ import uk.ac.nott.cs.g54dia.library.*;
 public class Driver {
     MemPoint current_point = new MemPoint(0, 0);
 
-    public Action driveTo(MemPoint target) {
+    public int getDirection(MemPoint target) {
         int dx = target.x - current_point.x;
         int dy = target.y - current_point.y;
 
         if (dx > 0 && dy > 0) {
-            this.current_point.x++;
-            this.current_point.y++;
-            return new MoveAction(MoveAction.NORTHEAST);
+            return MoveAction.NORTHEAST;
         } else if (dx > 0 && dy < 0) {
-            this.current_point.x++;
-            this.current_point.y--;
-            return new MoveAction(MoveAction.SOUTHEAST);
+            return MoveAction.SOUTHEAST;
         } else if (dx > 0 && dy == 0) {
-            this.current_point.x++;
-            return new MoveAction(MoveAction.EAST);
+            return MoveAction.EAST;
         } else if (dx < 0 && dy > 0) {
-            this.current_point.x--;
-            this.current_point.y++;
-            return new MoveAction(MoveAction.NORTHWEST);
+            return MoveAction.NORTHWEST;
         } else if (dx < 0 && dy < 0) {
-            this.current_point.x--;
-            this.current_point.y--;
-            return new MoveAction(MoveAction.SOUTHWEST);
+            return MoveAction.SOUTHWEST;
         } else if (dx < 0 && dy == 0) {
-            this.current_point.x--;
-            return new MoveAction(MoveAction.WEST);
+            return MoveAction.WEST;
         } else if (dx == 0 && dy > 0) {
-            this.current_point.y++;
-            return new MoveAction(MoveAction.NORTH);
+            return MoveAction.NORTH;
         } else if (dx == 0 && dy < 0) {
-            this.current_point.y--;
-            return new MoveAction(MoveAction.SOUTH);
+            return MoveAction.SOUTH;
         } else {
-            throw new ValueException("Already there");
+            return -1;
         }
+    }
+
+    public Action driveTo(MemPoint target) {
+        int direction = this.getDirection(target);
+
+        switch (direction) {
+            case MoveAction.NORTHEAST:
+                this.current_point.x++;
+                this.current_point.y++;
+                break;
+            case MoveAction.SOUTHEAST:
+                this.current_point.x++;
+                this.current_point.y--;
+                break;
+            case MoveAction.EAST:
+                this.current_point.x++;
+                break;
+            case MoveAction.NORTHWEST:
+                this.current_point.x--;
+                this.current_point.y++;
+                break;
+            case MoveAction.SOUTHWEST:
+                this.current_point.x--;
+                this.current_point.y--;
+                break;
+            case MoveAction.WEST:
+                this.current_point.x--;
+                break;
+            case MoveAction.NORTH:
+                this.current_point.y++;
+                break;
+            case MoveAction.SOUTH:
+                this.current_point.y--;
+                break;
+            default:
+                throw new ValueException("Already there");
+        }
+
+        return new MoveAction(direction);
     }
 
     public MemPoint getCurrentPoint() {
