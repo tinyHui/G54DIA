@@ -1,27 +1,35 @@
 package SmartTanker;
 
-import uk.ac.nott.cs.g54dia.library.Cell;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import uk.ac.nott.cs.g54dia.library.Point;
 
 /**
  * Created by JasonChen on 2/15/15.
  */
-public class MemPoint {
-    int x;
-    int y;
+public class MemPoint implements Cloneable {
+    volatile int x, y;
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
+    MemPoint(int x, int y) {
         this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
         this.y = y;
+    }
+
+    public Point toPoint(MemMap map) {
+        Point p = map.getCell(this).getPoint();
+        if (p == null) {
+            throw new ValueException("Unrecognised Direction");
+        } else {
+            return p;
+        }
+    }
+
+    public boolean equals(Object o) {
+        MemPoint p = (MemPoint)o;
+        if (p==null) return false;
+        return (p.x == this.x) && (p.y == this.y);
+    }
+
+    public Object clone() {
+        return new MemPoint(x,y);
     }
 }
