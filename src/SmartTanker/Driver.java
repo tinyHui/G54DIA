@@ -10,6 +10,9 @@ public class Driver {
     MemPoint current_point = new MemPoint(0, 0);
 
     public int getDirection(MemPoint target) {
+        if (target == null) {
+            return -1;
+        }
         int dx = target.x - current_point.x;
         int dy = target.y - current_point.y;
 
@@ -75,5 +78,38 @@ public class Driver {
 
     public MemPoint getCurrentPoint() {
         return current_point;
+    }
+
+    public int inverseDirection(int direction) {
+        int d;
+        switch (direction) {
+            case MoveAction.NORTHEAST:
+                d = MoveAction.SOUTHWEST;
+                break;
+            case MoveAction.SOUTHEAST:
+                d = MoveAction.NORTHWEST;
+                break;
+            case MoveAction.EAST:
+                d = MoveAction.WEST;
+                break;
+            case MoveAction.NORTHWEST:
+                d = MoveAction.SOUTHEAST;
+                break;
+            case MoveAction.SOUTHWEST:
+                d = MoveAction.NORTHEAST;
+                break;
+            case MoveAction.WEST:
+                d = MoveAction.EAST;
+                break;
+            case MoveAction.NORTH:
+                d = MoveAction.SOUTH;
+                break;
+            case MoveAction.SOUTH:
+                d = MoveAction.NORTH;
+                break;
+            default:
+                return -1;
+        }
+        return d;
     }
 }

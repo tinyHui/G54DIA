@@ -13,8 +13,8 @@ import java.util.Map;
  * Created by JasonChen on 2/16/15.
  */
 public class TaskSys {
-    Map<Task, MemPoint> task_list = new HashMap<Task, MemPoint>();
     int MAX_FUEL = 100;
+    Map<Task, MemPoint> task_list = new HashMap<Task, MemPoint>();
 
     public Task scanTaskList(MemPoint p) {
         Task t = null;
@@ -39,8 +39,7 @@ public class TaskSys {
     }
 
     public void appendTask(MemPoint p, MemMap map) {
-        if (p.x < MAX_FUEL / 2 &&
-                p.y < MAX_FUEL / 2) {
+        if (p.abs_x < MAX_FUEL / 2 && p.abs_y < MAX_FUEL / 2) {
             Task t = ((Station) map.getCell(p)).getTask();
             if (t != null) {
                 Iterator it = this.task_list.entrySet().iterator();
@@ -66,6 +65,6 @@ public class TaskSys {
                 return (MemPoint) pairs.getValue();
             }
         }
-        throw new ValueException("No task found on that point");
+        return null;
     }
 }

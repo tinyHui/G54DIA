@@ -14,31 +14,36 @@ import java.util.HashMap;
  * Created by JasonChen on 2/15/15.
  */
 public class MemMap {
+    int MAX_FUEL = 100;
     Map<MemPoint, Station> station_list = new HashMap<MemPoint, Station>();
     Map<MemPoint, Well> well_list = new HashMap<MemPoint, Well>();
 
     public void appendStation(MemPoint p, Station s) {
-        Iterator it = station_list.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            MemPoint p_r = (MemPoint) pairs.getKey();
-            if (p_r.equals(p)) {
-                it.remove();
+        if (p.abs_x <= MAX_FUEL / 2 && p.abs_y <= MAX_FUEL / 2) {
+            Iterator it = station_list.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                MemPoint p_r = (MemPoint) pairs.getKey();
+                if (p_r.equals(p)) {
+                    it.remove();
+                }
             }
+            this.station_list.put(p, s);
         }
-        this.station_list.put(p, s);
     }
 
     public void appendWell(MemPoint p, Well w) {
-        Iterator it = this.station_list.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            MemPoint p_r = (MemPoint) pairs.getKey();
-            if (p_r.equals(p)) {
-                it.remove();
+        if (p.abs_x <= MAX_FUEL / 2 && p.abs_y <= MAX_FUEL / 2) {
+            Iterator it = this.station_list.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                MemPoint p_r = (MemPoint) pairs.getKey();
+                if (p_r.equals(p)) {
+                    it.remove();
+                }
             }
+            this.well_list.put((MemPoint) p.clone(), w);
         }
-        this.well_list.put((MemPoint) p.clone(), w);
     }
 
     public MemPoint getNearestWell(MemPoint current) {
@@ -59,25 +64,27 @@ public class MemMap {
     }
 
     public Cell getCell(MemPoint p) {
-        Iterator it_s = this.station_list.entrySet().iterator();
-        while (it_s.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it_s.next();
-            MemPoint p_r = (MemPoint) pairs.getKey();
-            if (p_r.x == p.x && p_r.y == p.y) {
-                return (Cell) pairs.getValue();
+        if (p != null) {
+            Iterator it_s = this.station_list.entrySet().iterator();
+            while (it_s.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it_s.next();
+                MemPoint p_r = (MemPoint) pairs.getKey();
+                if (p_r.x == p.abs_x && p_r.y == p.abs_y) {
+                    return (Cell) pairs.getValue();
+                }
             }
-        }
 
-        Iterator it_w = this.well_list.entrySet().iterator();
-        while (it_w.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it_w.next();
-            MemPoint p_r = (MemPoint) pairs.getKey();
-            if (p_r.x == p.x && p_r.y == p.y) {
-                return (Cell) pairs.getValue();
+            Iterator it_w = this.well_list.entrySet().iterator();
+            while (it_w.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it_w.next();
+                MemPoint p_r = (MemPoint) pairs.getKey();
+                if (p_r.x == p.abs_x && p_r.y == p.abs_y) {
+                    return (Cell) pairs.getValue();
+                }
             }
+            throw new ValueException("Neither station nor well found on that point");
         }
-
-        throw new ValueException("Neither station nor well found on that point");
+        throw new ValueException("Can't find for a null point");
     }
 
     public MemPoint nearerPoint(MemPoint p, MemPoint p1, MemPoint p2) {

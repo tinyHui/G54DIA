@@ -8,20 +8,13 @@ import uk.ac.nott.cs.g54dia.library.Point;
  * Created by JasonChen on 2/15/15.
  */
 public class MemPoint implements Cloneable {
-    volatile int x, y;
+    volatile int x, y, abs_x, abs_y;
 
     MemPoint(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public Point toPoint(MemMap map) {
-        Point p = map.getCell(this).getPoint();
-        if (p == null) {
-            throw new ValueException("Unrecognised Direction");
-        } else {
-            return p;
-        }
+        this.abs_x = Math.abs(x);
+        this.abs_y = Math.abs(y);
     }
 
     public boolean equals(Object o) {
@@ -35,8 +28,12 @@ public class MemPoint implements Cloneable {
     }
 
     public int calcDistance(MemPoint p2) {
-        int dx = Math.abs(this.x - this.x);
-        int dy = Math.abs(p2.y - p2.y);
-        return dx > dy ? dx : dy;
+        if (p2 == null) {
+            return 0;
+        }
+        int dx = Math.abs(this.x - p2.x);
+        int dy = Math.abs(this.y - p2.y);
+        // coordinate start from 0
+        return (dx > dy ? dx : dy) + 1;
     }
 }
