@@ -3,12 +3,11 @@ package SmartTanker;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import uk.ac.nott.cs.g54dia.library.Cell;
 import uk.ac.nott.cs.g54dia.library.Station;
-import uk.ac.nott.cs.g54dia.library.Task;
 import uk.ac.nott.cs.g54dia.library.Well;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Created by JasonChen on 2/15/15.

@@ -1,7 +1,8 @@
 package SmartTanker;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import uk.ac.nott.cs.g54dia.library.*;
+import uk.ac.nott.cs.g54dia.library.Action;
+import uk.ac.nott.cs.g54dia.library.MoveAction;
 
 /**
  * Created by JasonChen on 2/15/15.
