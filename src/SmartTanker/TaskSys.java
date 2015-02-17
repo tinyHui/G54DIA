@@ -28,6 +28,7 @@ public class TaskSys {
             } else if (p.equals(t_p)) {
                 // at this point
                 t = t_r;
+                break;
             } else {
                 cost = t_p.calcDistance(p);
                 score = t_r.getRequired();
