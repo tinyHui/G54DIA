@@ -68,7 +68,7 @@ public class MemMap {
             while (it_s.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it_s.next();
                 MemPoint p_r = (MemPoint) pairs.getKey();
-                if (p_r.x == p.abs_x && p_r.y == p.abs_y) {
+                if (p_r.x == p.x && p_r.y == p.y) {
                     return (Cell) pairs.getValue();
                 }
             }
@@ -77,7 +77,7 @@ public class MemMap {
             while (it_w.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it_w.next();
                 MemPoint p_r = (MemPoint) pairs.getKey();
-                if (p_r.x == p.abs_x && p_r.y == p.abs_y) {
+                if (p_r.x == p.x && p_r.y == p.y) {
                     return (Cell) pairs.getValue();
                 }
             }
@@ -86,15 +86,19 @@ public class MemMap {
         throw new ValueException("Can't find for a null point");
     }
 
-    public MemPoint nearerPoint(MemPoint p, MemPoint p1, MemPoint p2) {
-        if (p1 == null) {
+    public MemPoint nearerMidPoint(MemPoint sp, MemPoint ep, MemPoint p1, MemPoint p2) {
+        if (p1 == null && p2 == null) {
+            return null;
+        } else if (p1 == null) {
             return p2;
         } else if (p2 == null) {
             return p1;
         }
-        int d1 = p.calcDistance(p1);
-        int d2 = p.calcDistance(p2);
-        return d1 > d2 ? p2 : p1;
+
+        MemPoint mid_point = new MemPoint ((sp.x + ep.x) / 2, (sp.y + ep.y) / 2);
+        int p1_to_mid = p1.calcDistance(mid_point);
+        int p2_to_mid = p2.calcDistance(mid_point);
+        return p1_to_mid > p2_to_mid ? p2 : p1;
     }
 
 }

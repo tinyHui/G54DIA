@@ -32,7 +32,6 @@ public class SmartTanker extends Tanker {
     Cell current_cell;
 
     MemPoint current_point = driver.getCurrentPoint();
-    MemPoint history_point;
     MemPoint target_point;
 
     TaskSys ts = new TaskSys();
@@ -118,20 +117,20 @@ public class SmartTanker extends Tanker {
         }
     }
 
-    private void recordHistory() {
-        if (history_point == null &&
-                this.current_cell instanceof EmptyCell) {
-            this.history_point = (MemPoint) this.current_point.clone();
-
-            if (this.history_point.x >= MAX_FUEL - VIEW_RANGE) {
-                this.history_point.x = MAX_FUEL - VIEW_RANGE;
-            }
-
-            if (this.history_point.y >= MAX_FUEL - VIEW_RANGE) {
-                this.history_point.y = MAX_FUEL - VIEW_RANGE;
-            }
-        }
-    }
+//    private void recordHistory() {
+//        if (history_point == null &&
+//                this.current_cell instanceof EmptyCell) {
+//            this.history_point = (MemPoint) this.current_point.clone();
+//
+//            if (this.history_point.x >= MAX_FUEL - VIEW_RANGE) {
+//                this.history_point.x = MAX_FUEL - VIEW_RANGE;
+//            }
+//
+//            if (this.history_point.y >= MAX_FUEL - VIEW_RANGE) {
+//                this.history_point.y = MAX_FUEL - VIEW_RANGE;
+//            }
+//        }
+//    }
 
     private void exploreWorld() {
         /*
@@ -181,10 +180,10 @@ public class SmartTanker extends Tanker {
     private int arbitrator() {
         // at history point and tanker not going back refuel,
         // set history point to null
-        if (this.current_point.equals(this.history_point) &&
-                mode != DRIVE_TO_PUMP) {
-            this.history_point = null;
-        }
+//        if (this.current_point.equals(this.history_point) &&
+//                mode != DRIVE_TO_PUMP) {
+//            this.history_point = null;
+//        }
 
         // at fuel pump, gas not max
         if (this.current_cell instanceof FuelPump &&
@@ -206,41 +205,34 @@ public class SmartTanker extends Tanker {
         if (!this.enough_fuel &&
                 !(this.current_cell instanceof FuelPump)) {
             // remain fuel can only go back fuel pump directly and current not at fuel pump
-            recordHistory();
+//            recordHistory();
             return DRIVE_TO_PUMP;
         }
 
         if (this.current_t == null) {
-            if (this.history_point != null &&
-                    this.mode != DRIVE_TO_FACILITY) {
-                this.target_point = (MemPoint) this.history_point.clone();
-                return DRIVE_TO_HISTORY;
-            }
+//            if (this.history_point != null &&
+//                    this.mode != DRIVE_TO_FACILITY) {
+//                this.target_point = (MemPoint) this.history_point.clone();
+//                return DRIVE_TO_HISTORY;
+//            }
         } else {
             MemPoint task_point = this.ts.getPoint(this.current_t);
-            int direction_of_task = this.driver.getDirection(task_point);
-            MemPoint nearest_well_task = this.map.getNearestWell(task_point);
-            MemPoint nearest_well_current = this.map.getNearestWell(this.current_point);
-            MemPoint nearest_well = null;
-            if ((this.driver.getDirection(nearest_well_task) == direction_of_task &&
-                    this.driver.getDirection(nearest_well_current) == direction_of_task)) {
-                nearest_well = (MemPoint) this.map.nearerPoint(this.current_point, nearest_well_task, nearest_well_current).clone();
-            } else if (this.driver.getDirection(nearest_well_task) == direction_of_task) {
-                nearest_well = (MemPoint) nearest_well_task.clone();
-            } else if (this.driver.getDirection(nearest_well_current) == direction_of_task) {
-                nearest_well = (MemPoint) nearest_well_current.clone();
-            }
             // enough water to finish task
             if (this.water_level >= this.current_t.getWaterDemand()) {
-                if (this.current_point.equals(this.ts.getPoint(this.current_t))) {
+                if (this.current_point.equals(task_point)) {
                     // at task cell, finish it
                     return DELIVER_WATER;
                 } else {
                     // not at task cell, go there
-                    this.target_point = (MemPoint) this.ts.getPoint(this.current_t).clone();
+                    this.target_point = (MemPoint) task_point.clone();
                     return DRIVE_TO_FACILITY;
                 }
             } else {
+                MemPoint nearest_well_task = this.map.getNearestWell(task_point);
+                MemPoint nearest_well_current = this.map.getNearestWell(this.current_point);
+                MemPoint nearest_well = this.map.nearerMidPoint(this.current_point, task_point,
+                        nearest_well_task, nearest_well_current);
+
                 // found nearest well
                 if (nearest_well != null) {
                     // go refill water
