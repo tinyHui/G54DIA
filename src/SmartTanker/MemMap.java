@@ -18,7 +18,8 @@ public class MemMap {
     Map<MemPoint, Well> well_list = new HashMap<MemPoint, Well>();
 
     public void appendStation(MemPoint p, Station s) {
-        if (p.abs_x <= MAX_RANGE && p.abs_y <= MAX_RANGE) {
+        // deliver water takes one time step, cost one fuel
+        if (p.abs_x < MAX_RANGE && p.abs_y < MAX_RANGE) {
             Iterator it = station_list.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
@@ -32,7 +33,8 @@ public class MemMap {
     }
 
     public void appendWell(MemPoint p, Well w) {
-        if (p.abs_x <= MAX_RANGE && p.abs_y <= MAX_RANGE) {
+        // fill water takes one time step, cost one fuel
+        if (p.abs_x < MAX_RANGE && p.abs_y < MAX_RANGE) {
             Iterator it = this.station_list.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
