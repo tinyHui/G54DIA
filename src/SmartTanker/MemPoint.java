@@ -30,6 +30,6 @@ public class MemPoint implements Cloneable {
         int dx = Math.abs(this.x - p2.x);
         int dy = Math.abs(this.y - p2.y);
         // coordinate start from 0
-        return (dx > dy ? dx : dy) + 1;
+        return dx > dy ? dx : dy;
     }
 }

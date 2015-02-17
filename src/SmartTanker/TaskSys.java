@@ -11,13 +11,13 @@ import java.util.Map;
  * Created by JasonChen on 2/16/15.
  */
 public class TaskSys {
-    int MAX_FUEL = 100;
     Map<Task, MemPoint> task_list = new HashMap<Task, MemPoint>();
 
     public Task scanTaskList(MemPoint p) {
         Task t = null;
-        int min_distance = 100;
-        int distance;
+        int min_cost = 100;
+        int score;
+        int cost;
         Iterator it = this.task_list.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
@@ -25,10 +25,15 @@ public class TaskSys {
             MemPoint t_p = (MemPoint) pairs.getValue();
             if (t_r.isComplete()) {
                 it.remove();
+            } else if (p.equals(t_p)) {
+                // at this point
+                t = t_r;
             } else {
-                distance = t_p.calcDistance(p);
-                if (distance < min_distance) {
-                    min_distance = distance;
+                cost = t_p.calcDistance(p);
+                score = t_r.getRequired();
+                // if can get more score by spend cost
+                if (cost - score < min_cost) {
+                    min_cost = cost;
                     t = t_r;
                 }
             }
@@ -37,8 +42,9 @@ public class TaskSys {
     }
 
     public void appendTask(MemPoint p, MemMap map) {
-        if (p.abs_x < MAX_FUEL / 2 && p.abs_y < MAX_FUEL / 2) {
-            Task t = ((Station) map.getCell(p)).getTask();
+        Station s = ((Station) map.getCell(p));
+        if (s != null) {
+            Task t = s.getTask();
             if (t != null) {
                 Iterator it = this.task_list.entrySet().iterator();
                 while (it.hasNext()) {
@@ -48,7 +54,6 @@ public class TaskSys {
                         it.remove();
                     }
                 }
-                MemPoint well_point = map.getNearestWell(p);
                 this.task_list.put(t, (MemPoint) p.clone());
             }
         }

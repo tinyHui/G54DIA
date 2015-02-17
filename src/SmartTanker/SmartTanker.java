@@ -32,7 +32,7 @@ public class SmartTanker extends Tanker {
     Cell current_cell;
 
     MemPoint current_point = driver.getCurrentPoint();
-    MemPoint target_point;
+    MemPoint target_point = FUEL_PUMP;
 
     TaskSys ts = new TaskSys();
     Task current_t;
@@ -90,14 +90,14 @@ public class SmartTanker extends Tanker {
         if (this.mode == DRIVE_TO_PUMP) {
             return false;
         }
-        int distance_to_fuel = this.current_point.calcDistance(this.FUEL_PUMP);
-        int distance_to_target = this.current_point.calcDistance(this.target_point);
-        if (this.driver.inverseDirection(this.driver.getDirection(this.FUEL_PUMP)) ==
-                this.driver.getDirection(this.target_point)) {
-            return this.fuel_level > distance_to_fuel;
+        int cost;
+        if (this.target_point == null) {
+            cost = this.current_point.calcDistance(FUEL_PUMP);
         } else {
-            return this.fuel_level > distance_to_fuel + distance_to_target;
+            cost = this.current_point.calcDistance(this.target_point) +
+                    this.target_point.calcDistance(FUEL_PUMP) + 1;
         }
+        return cost < this.fuel_level;
     }
 
     private void recordMap(Cell[][] view) {
@@ -135,10 +135,10 @@ public class SmartTanker extends Tanker {
     private void exploreWorld() {
         /*
         move this routine, clock wise
-        |\ | /|
-        |_\|/_|
-        | /|\ |
-        |/ | \|
+        /\ | /\
+       /  \|/  \
+       \  /|\  /
+        \/ | \/
          */
         this.one_direction_count++;
         if (this.one_direction_count >= VIEW_RANGE * 2) {
@@ -146,7 +146,7 @@ public class SmartTanker extends Tanker {
             this.direction++;
         }
 
-        if (this.direction > 8) {
+        if (this.direction > 12) {
             this.map_explored = true;
             this.direction = 1;
         }
@@ -171,6 +171,16 @@ public class SmartTanker extends Tanker {
             case 5:
                 this.target_point = new MemPoint(this.current_point.x-1,
                         this.current_point.y+1);
+                break;
+            case 9:
+            case 10:
+                this.target_point = new MemPoint(this.current_point.x,
+                        this.current_point.y+1);
+                break;
+            case 11:
+            case 12:
+                this.target_point = new MemPoint(this.current_point.x,
+                        this.current_point.y-1);
                 break;
             default:
                 throw new ValueException("Unrecognised Direction");
@@ -218,7 +228,7 @@ public class SmartTanker extends Tanker {
         } else {
             MemPoint task_point = this.ts.getPoint(this.current_t);
             // enough water to finish task
-            if (this.water_level >= this.current_t.getWaterDemand()) {
+            if (this.water_level >= this.current_t.getRequired()) {
                 if (this.current_point.equals(task_point)) {
                     // at task cell, finish it
                     return DELIVER_WATER;
@@ -230,7 +240,7 @@ public class SmartTanker extends Tanker {
             } else {
                 MemPoint nearest_well_task = this.map.getNearestWell(task_point);
                 MemPoint nearest_well_current = this.map.getNearestWell(this.current_point);
-                MemPoint nearest_well = this.map.nearerMidPoint(this.current_point, task_point,
+                MemPoint nearest_well = this.map.nearestToGo(this.current_point, task_point,
                         nearest_well_task, nearest_well_current);
 
                 // found nearest well

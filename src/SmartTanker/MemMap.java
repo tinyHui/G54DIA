@@ -13,12 +13,12 @@ import java.util.Map;
  * Created by JasonChen on 2/15/15.
  */
 public class MemMap {
-    int MAX_FUEL = 100;
+    int MAX_RANGE = 50;
     Map<MemPoint, Station> station_list = new HashMap<MemPoint, Station>();
     Map<MemPoint, Well> well_list = new HashMap<MemPoint, Well>();
 
     public void appendStation(MemPoint p, Station s) {
-        if (p.abs_x <= MAX_FUEL / 2 && p.abs_y <= MAX_FUEL / 2) {
+        if (p.abs_x <= MAX_RANGE && p.abs_y <= MAX_RANGE) {
             Iterator it = station_list.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
@@ -32,7 +32,7 @@ public class MemMap {
     }
 
     public void appendWell(MemPoint p, Well w) {
-        if (p.abs_x <= MAX_FUEL / 2 && p.abs_y <= MAX_FUEL / 2) {
+        if (p.abs_x <= MAX_RANGE && p.abs_y <= MAX_RANGE) {
             Iterator it = this.station_list.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
@@ -81,12 +81,12 @@ public class MemMap {
                     return (Cell) pairs.getValue();
                 }
             }
-            throw new ValueException("Neither station nor well found on that point");
+            return null;
         }
         throw new ValueException("Can't find for a null point");
     }
 
-    public MemPoint nearerMidPoint(MemPoint sp, MemPoint ep, MemPoint p1, MemPoint p2) {
+    public MemPoint nearestToGo(MemPoint sp, MemPoint ep, MemPoint p1, MemPoint p2) {
         if (p1 == null && p2 == null) {
             return null;
         } else if (p1 == null) {
@@ -95,10 +95,10 @@ public class MemMap {
             return p1;
         }
 
-        MemPoint mid_point = new MemPoint ((sp.x + ep.x) / 2, (sp.y + ep.y) / 2);
-        int p1_to_mid = p1.calcDistance(mid_point);
-        int p2_to_mid = p2.calcDistance(mid_point);
-        return p1_to_mid > p2_to_mid ? p2 : p1;
+        int p1_distance_sum = p1.calcDistance(sp) + p1.calcDistance(ep);
+        int p2_distance_sum = p2.calcDistance(sp) + p2.calcDistance(ep);
+
+        return p1_distance_sum > p2_distance_sum ? p2 : p1;
     }
 
 }
