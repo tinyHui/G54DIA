@@ -1,6 +1,5 @@
 package SmartTanker;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import uk.ac.nott.cs.g54dia.library.Action;
 import uk.ac.nott.cs.g54dia.library.MoveAction;
 
@@ -40,40 +39,7 @@ public class Driver {
 
     public Action driveTo(MemPoint target) {
         int direction = this.getDirection(target);
-
-        switch (direction) {
-            case MoveAction.NORTHEAST:
-                this.current_point.x++;
-                this.current_point.y++;
-                break;
-            case MoveAction.SOUTHEAST:
-                this.current_point.x++;
-                this.current_point.y--;
-                break;
-            case MoveAction.EAST:
-                this.current_point.x++;
-                break;
-            case MoveAction.NORTHWEST:
-                this.current_point.x--;
-                this.current_point.y++;
-                break;
-            case MoveAction.SOUTHWEST:
-                this.current_point.x--;
-                this.current_point.y--;
-                break;
-            case MoveAction.WEST:
-                this.current_point.x--;
-                break;
-            case MoveAction.NORTH:
-                this.current_point.y++;
-                break;
-            case MoveAction.SOUTH:
-                this.current_point.y--;
-                break;
-            default:
-                throw new ValueException("Already there");
-        }
-
+        this.current_point.moveTo(direction);
         return new MoveAction(direction);
     }
 

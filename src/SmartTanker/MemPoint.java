@@ -1,5 +1,8 @@
 package SmartTanker;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import uk.ac.nott.cs.g54dia.library.MoveAction;
+
 /**
  * Created by JasonChen on 2/15/15.
  */
@@ -31,5 +34,40 @@ public class MemPoint implements Cloneable {
         int dy = Math.abs(this.y - p2.y);
         // coordinate start from 0
         return dx > dy ? dx : dy;
+    }
+
+    public void moveTo(int direction) {
+        switch (direction) {
+            case MoveAction.NORTHEAST:
+                this.x++;
+                this.y++;
+                break;
+            case MoveAction.SOUTHEAST:
+                this.x++;
+                this.y--;
+                break;
+            case MoveAction.EAST:
+                this.x++;
+                break;
+            case MoveAction.NORTHWEST:
+                this.x--;
+                this.y++;
+                break;
+            case MoveAction.SOUTHWEST:
+                this.x--;
+                this.y--;
+                break;
+            case MoveAction.WEST:
+                this.x--;
+                break;
+            case MoveAction.NORTH:
+                this.y++;
+                break;
+            case MoveAction.SOUTH:
+                this.y--;
+                break;
+            default:
+                throw new ValueException("Already there");
+        }
     }
 }
