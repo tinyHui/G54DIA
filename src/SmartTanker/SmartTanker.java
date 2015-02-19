@@ -112,13 +112,11 @@ public class SmartTanker extends Tanker {
             return false;
         }
         int cost;
-        if (this.target_point == null) {
-            cost = this.current_point.calcDistance(FUEL_PUMP);
-        } else {
-            // add extra one fuel for deliver water or refill water
-            cost = this.current_point.calcDistance(this.target_point) +
-                    this.target_point.calcDistance(FUEL_PUMP) + 1;
-        }
+
+        // add extra one fuel for deliver water or refill water
+        cost = this.current_point.calcDistance(this.target_point) +
+                this.target_point.calcDistance(FUEL_PUMP) + 1;
+
         return cost < this.fuel_level;
     }
 
