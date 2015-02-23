@@ -200,11 +200,6 @@ public class SmartTanker extends Tanker {
         if (this.current_cell instanceof Well &&
                 this.water_level < MAX_WATER) {
             return LOAD_WATER;
-        } else
-        // at task cell and have water, give all water
-        if (this.current_point.equals(this.ts.getPoint(this.current_t)) &&
-                this.water_level > 0) {
-            return DELIVER_WATER;
         }
 
         // not enough fuel to go back and refill
@@ -216,8 +211,9 @@ public class SmartTanker extends Tanker {
 
         if (this.current_t != null) {
             MemPoint task_point = this.ts.getPoint(this.current_t);
-            // enough water to finish task
-            if (this.current_point.equals(task_point)) {
+            // at task cell and have water, give all water
+            if (this.current_point.equals(task_point) &&
+                    this.water_level > 0) {
                 // at task cell, finish it
                 return DELIVER_WATER;
             }
