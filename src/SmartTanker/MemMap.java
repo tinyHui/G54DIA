@@ -13,13 +13,14 @@ import java.util.Map;
  * Created by JasonChen on 2/15/15.
  */
 public class MemMap {
+    final MemPoint FUEL_PUMP = new MemPoint(0, 0);
     int MAX_RANGE = 50;
     Map<MemPoint, Station> station_list = new HashMap<MemPoint, Station>();
     Map<MemPoint, Well> well_list = new HashMap<MemPoint, Well>();
 
     public void appendStation(MemPoint p, Station s) {
         // deliver water takes one time step, cost one fuel
-        if (p.abs_x < MAX_RANGE && p.abs_y < MAX_RANGE) {
+        if (p.calcDistance(FUEL_PUMP) < MAX_RANGE) {
             Iterator it = station_list.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
@@ -34,7 +35,7 @@ public class MemMap {
 
     public void appendWell(MemPoint p, Well w) {
         // fill water takes one time step, cost one fuel
-        if (p.abs_x < MAX_RANGE && p.abs_y < MAX_RANGE) {
+        if (p.calcDistance(FUEL_PUMP) < MAX_RANGE) {
             Iterator it = this.station_list.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();

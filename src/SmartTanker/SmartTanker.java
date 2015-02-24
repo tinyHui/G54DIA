@@ -20,16 +20,7 @@ public class SmartTanker extends Tanker {
             EXPLORE = 3,
             DRIVE_TO_PUMP = 4,
             DRIVE_TO_FACILITY = 5;
-    final static int
-            EXPLORE_NORTH       =   0,
-            EXPLORE_SOUTH       =   1,
-            EXPLORE_EAST        =   2,
-            EXPLORE_WEST        =   3,
-            EXPLORE_NORTHEAST   =   4,
-            EXPLORE_NORTHWEST   =   5,
-            EXPLORE_SOUTHEAST   =   6,
-            EXPLORE_SOUTHWEST   =   7;
-
+    int EXPLIM = MAX_FUEL / 2 - VIEW_RANGE - 1;
     final MemPoint FUEL_PUMP = new MemPoint(0, 0);
 
     int mode = EXPLORE;
@@ -43,14 +34,12 @@ public class SmartTanker extends Tanker {
 
     MemPoint current_point = driver.getCurrentPoint();
     MemPoint target_point = (MemPoint) FUEL_PUMP.clone();
-    MemPoint explore_start_point = (MemPoint) FUEL_PUMP.clone();
 
     TaskSys ts = new TaskSys();
     Task current_t;
 
     int explore_direction = -1;
     int explore_direction_prev = explore_direction;
-    int explore_one_direction_count = 0;
 
     int water_level = 0;
     int fuel_level = 0;
@@ -65,7 +54,7 @@ public class SmartTanker extends Tanker {
         Action act;
 
         this.mode = arbitrator();
-//        this.mode = EXPLORE;
+
         switch (this.mode) {
             case EXPLORE:
                 exploreWorld();
@@ -108,13 +97,8 @@ public class SmartTanker extends Tanker {
     }
 
     private boolean checkFuel() {
-        if (this.mode == DRIVE_TO_PUMP) {
-            return false;
-        }
-        int cost;
-
         // add extra one fuel for deliver water or refill water
-        cost = this.current_point.calcDistance(this.target_point) +
+        int cost = this.current_point.calcDistance(this.target_point) +
                 this.target_point.calcDistance(FUEL_PUMP) + 1;
 
         return cost < this.fuel_level;
@@ -145,48 +129,19 @@ public class SmartTanker extends Tanker {
         random choose the direction
         */
         Random generator = new Random();
-        int explore_limit = MAX_FUEL / 2 - VIEW_RANGE - 1;
 
         // start a new explore
-        if (!(this.mode_prev == LOAD_WATER ||
-                this.mode_prev == EXPLORE) ||
-                this.current_point.equals(this.explore_start_point) ||
-                this.explore_one_direction_count == 0) {
+        if (this.explore_direction == -1 ||
+                this.current_point.calcDistance(FUEL_PUMP) > EXPLIM) {
             do {
                 this.explore_direction = generator.nextInt(8);
             } while (this.explore_direction == this.explore_direction_prev);
-            switch (this.explore_direction) {
-                case EXPLORE_NORTH:
-                case EXPLORE_SOUTH:
-                    explore_limit -= this.current_point.y;
-                    break;
-                case EXPLORE_EAST:
-                case EXPLORE_WEST:
-                    explore_limit -= this.current_point.x;
-                    break;
-                case EXPLORE_NORTHEAST:
-                case EXPLORE_NORTHWEST:
-                case EXPLORE_SOUTHEAST:
-                case EXPLORE_SOUTHWEST:
-                    explore_limit = Math.min(explore_limit - this.current_point.x,
-                            explore_limit - this.current_point.y);
-                    break;
-            }
-            this.explore_one_direction_count = 0;
-            this.explore_start_point = (MemPoint) this.current_point.clone();
+            this.explore_direction_prev = this.explore_direction;
+        } else {
+            this.explore_direction = this.explore_direction_prev;
         }
-
-        this.explore_one_direction_count++;
-        if (this.explore_one_direction_count >= explore_limit) {
-            this.explore_one_direction_count = 0;
-        }
-        if (explore_limit < 0) {
-            this.explore_direction = this.driver.inverseDirection(this.explore_direction);
-        }
-
         this.target_point = (MemPoint) this.current_point.clone();
         this.target_point.moveTo(this.explore_direction);
-        this.explore_direction_prev = this.driver.getDirection(this.explore_start_point);
     }
 
     private int arbitrator() {
