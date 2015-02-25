@@ -29,37 +29,34 @@ public class SmartTanker extends Tanker {
     boolean enough_fuel = false;
 
     MemMap map = new MemMap();
-    Driver driver = new Driver();
+    TaskSys ts = new TaskSys();
+    Driver driver = new Driver(map, ts);
     Cell current_cell;
+    Task t;
 
     MemPoint current_point = driver.getCurrentPoint();
     MemPoint target_point = (MemPoint) FUEL_PUMP.clone();
 
-    TaskSys ts = new TaskSys();
-    Task current_t;
-
     int explore_direction = -1;
     int explore_direction_prev = explore_direction;
-
     int water_level = 0;
     int fuel_level = 0;
+    Boolean task_list_empty = true;
     long time_left = DURATION;
 
     public SmartTanker() {}
 
     @Override
-    public Action senseAndAct(Cell[][] view, long timestep) {
-        recordMap(view);
-        updateState(view, timestep);
+    public Action senseAndAct(Cell[][] view, long time_step) {
         Action act;
+        recordMap(view);
+        updateState(view, time_step);
 
         this.mode = arbitrator();
 
         switch (this.mode) {
             case EXPLORE:
                 exploreWorld();
-                act = this.driver.driveTo(this.target_point);
-                break;
             case DRIVE_TO_FACILITY:
                 act = this.driver.driveTo(this.target_point);
                 break;
@@ -69,11 +66,11 @@ public class SmartTanker extends Tanker {
             case REFUEL:
                 act = new RefuelAction();
                 break;
-            case DELIVER_WATER:
-                act = new DeliverWaterAction(this.current_t);
-                break;
             case LOAD_WATER:
                 act = new LoadWaterAction();
+                break;
+            case DELIVER_WATER:
+                act = new DeliverWaterAction(this.t);
                 break;
             default:
                 throw new ValueException("Unrecognised mode");
@@ -82,8 +79,8 @@ public class SmartTanker extends Tanker {
         return act;
     }
 
-    private void updateState(Cell[][] view, long timestep) {
-        this.time_left = DURATION - timestep;
+    private void updateState(Cell[][] view, long time_step) {
+        this.time_left = DURATION - time_step;
 
         this.current_point = this.driver.getCurrentPoint();
         this.current_cell = this.getCurrentCell(view);
@@ -93,7 +90,7 @@ public class SmartTanker extends Tanker {
 
         this.enough_fuel = checkFuel();
 
-        this.current_t = this.ts.scanTaskList(this.current_point);
+        this.task_list_empty = this.ts.scanTaskList();
     }
 
     private boolean checkFuel() {
@@ -164,34 +161,29 @@ public class SmartTanker extends Tanker {
             return DRIVE_TO_PUMP;
         }
 
-        if (this.current_t != null) {
-            MemPoint task_point = this.ts.getPoint(this.current_t);
-            // at task cell and have water, give all water
-            if (this.current_point.equals(task_point) &&
-                    this.water_level > 0) {
-                // at task cell, finish it
-                return DELIVER_WATER;
-            }
+        // task list not empty
+        if (!this.task_list_empty) {
+            TaskPair task_pair = this.driver.getNextPoint(this.current_point, this.water_level, this.fuel_level, this.time_left);
+            this.t = task_pair.getTask();
+            MemPoint task_point = task_pair.getTaskPoint();
+            MemPoint well_point = task_pair.getWellPoint();
 
-            if (this.water_level >= this.current_t.getRequired()) {
-                // not at task cell, go there
-                this.target_point = (MemPoint) task_point.clone();
-                return DRIVE_TO_FACILITY;
-            } else {
-                MemPoint nearest_well_task = this.map.getNearestWell(task_point);
-                MemPoint nearest_well_current = this.map.getNearestWell(this.current_point);
-                MemPoint nearest_well = this.map.nearestToGo(this.current_point, task_point,
-                        nearest_well_task, nearest_well_current);
-
-                // found nearest well
-                if (nearest_well != null) {
-                    // go refill water
-                    this.target_point = nearest_well;
+            // found best task to finish
+            if (this.t != null && task_point != null) {
+                if (well_point != null) {
+                    // need well
+                    this.target_point = well_point;
                     return DRIVE_TO_FACILITY;
-                } else {
-                    // continue search water
-                    return EXPLORE;
-                }
+                } else
+                    // no need go well
+                    if (!this.current_point.equals(task_point)) {
+                        // not at task point
+                        this.target_point = task_point;
+                        return DRIVE_TO_FACILITY;
+                    } else {
+                        // at task cell
+                        return DELIVER_WATER;
+                    }
             }
         }
 

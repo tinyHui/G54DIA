@@ -48,23 +48,6 @@ public class MemMap {
         }
     }
 
-    public MemPoint getNearestWell(MemPoint current) {
-        int min_distance = 100;
-        int distance;
-        MemPoint well = null;
-        Iterator it = this.well_list.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            MemPoint p_r = (MemPoint) pairs.getKey();
-            distance = p_r.calcDistance(current);
-            if (distance < min_distance) {
-                min_distance = distance;
-                well = p_r;
-            }
-        }
-        return well;
-    }
-
     public Cell getCell(MemPoint p) {
         if (p != null) {
             Iterator it_s = this.station_list.entrySet().iterator();
@@ -87,21 +70,6 @@ public class MemMap {
             return null;
         }
         throw new ValueException("Can't find for a null point");
-    }
-
-    public MemPoint nearestToGo(MemPoint sp, MemPoint ep, MemPoint p1, MemPoint p2) {
-        if (p1 == null && p2 == null) {
-            return null;
-        } else if (p1 == null) {
-            return p2;
-        } else if (p2 == null) {
-            return p1;
-        }
-
-        int p1_distance_sum = p1.calcDistance(sp) + p1.calcDistance(ep);
-        int p2_distance_sum = p2.calcDistance(sp) + p2.calcDistance(ep);
-
-        return p1_distance_sum > p2_distance_sum ? p2 : p1;
     }
 
 }

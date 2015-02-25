@@ -11,7 +11,7 @@ public class Simulator {
      * Reducing this value causes the simulation to run faster.
      */
 //    private static int DELAY = 100;
-    private static int DELAY = 10;
+    private static int DELAY = 0;
 
     /**
      * Number of timesteps to execute
