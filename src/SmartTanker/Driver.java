@@ -103,10 +103,14 @@ public class Driver {
             } else {
                 // not enough
                 wp = getMidWell(tp);
+                if (wp == null) {
+                    continue;
+                }
                 step_to_task = p.calcDistance(wp) + wp.calcDistance(tp);
             }
 
             step_to_task += tp.calcDistance(FUEL_PUMP);
+            score -= step_to_task;
 
             if (step_to_task > left_step_num) {
                 // too far to go
