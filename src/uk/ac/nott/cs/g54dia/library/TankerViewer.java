@@ -1,5 +1,6 @@
 package uk.ac.nott.cs.g54dia.library;
 import java.awt.*;
+import java.text.DecimalFormat;
 import javax.swing.*;
 /**
  * A simple user interface for watching an individual Tanker.
@@ -95,6 +96,12 @@ public class TankerViewer extends JFrame {
         this.tank = t;
     }
 
+    static public String customFormat(String pattern, double value ) {
+        DecimalFormat myFormatter = new DecimalFormat(pattern);
+        String output = myFormatter.format(value);
+        return output;
+    }
+
     public void tick(Environment env) {
         Cell[][] view = env.getView(tank.getPosition(),Tanker.VIEW_RANGE);
         pos.setText(tank.getPosition().toString());
@@ -103,7 +110,7 @@ public class TankerViewer extends JFrame {
         fuel.setText(new String(""+tank.getFuelLevel()));
         completed.setText(new String("" + tank.getCompletedCount()));
         delivered.setText("" + tank.waterDelivered);
-        score.setText("" + tank.getScore());
+        score.setText(customFormat("###,###,###,###,###", tank.getScore()));
         for (int x = 0; x < SIZE; x++) {
             for (int y = 0; y < SIZE; y++) {
                 Icon cur = iconfactory.getIconForCell(view[x][y]);
