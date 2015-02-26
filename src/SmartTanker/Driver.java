@@ -14,6 +14,7 @@ public class Driver {
     MemPoint current_point = new MemPoint(0, 0);
     MemMap map;
     TaskSys ts;
+    int prev_task_list_size = 0;
 
     public Driver(MemMap map, TaskSys ts) {
         this.map = map;
@@ -109,18 +110,22 @@ public class Driver {
 
     public void plan(Stack<TaskPair> plan_list, int water_level, long step_left) {
         HashMap<Task, MemPoint> task_list = this.ts.scanTaskList();
-        plan_list.clear();
+        System.out.println(this.prev_task_list_size + "\t" + task_list.size());
+        if (this.prev_task_list_size < task_list.size()) {
+            plan_list.clear();
 
-        for (Map.Entry<Task, MemPoint> pairs : task_list.entrySet()) {
-            Task t = pairs.getKey();
-            MemPoint p = pairs.getValue();
+            for (Map.Entry<Task, MemPoint> pairs : task_list.entrySet()) {
+                Task t = pairs.getKey();
+                MemPoint p = pairs.getValue();
 
-            plan_list.push(new TaskPair(p, t));
+                plan_list.push(new TaskPair(p, t));
 
-            if (t.getRequired() > water_level) {
-                MemPoint w_p = getMidWell(this.current_point, p);
-                plan_list.push(new TaskPair(w_p, null));
+                if (t.getRequired() > water_level) {
+                    MemPoint w_p = getMidWell(this.current_point, p);
+                    plan_list.push(new TaskPair(w_p, null));
+                }
             }
         }
+        this.prev_task_list_size = task_list.size();
     }
 }
