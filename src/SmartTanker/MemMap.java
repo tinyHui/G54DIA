@@ -20,7 +20,7 @@ public class MemMap {
 
     public void appendStation(MemPoint p, Station s) {
         // deliver water takes one time step, cost one fuel
-        if (p.calcDistance(FUEL_PUMP) < MAX_RANGE) {
+        if (p.calcDistance(FUEL_PUMP) <= MAX_RANGE) {
             Iterator it = station_list.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
@@ -35,7 +35,7 @@ public class MemMap {
 
     public void appendWell(MemPoint p, Well w) {
         // fill water takes one time step, cost one fuel
-        if (p.calcDistance(FUEL_PUMP) < MAX_RANGE) {
+        if (p.calcDistance(FUEL_PUMP) <= MAX_RANGE) {
             Iterator it = this.station_list.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
@@ -69,7 +69,7 @@ public class MemMap {
             }
             return null;
         }
-        throw new ValueException("Can't find for a null point");
+        throw new ValueException("Can'current_task find for a null point");
     }
 
 }
