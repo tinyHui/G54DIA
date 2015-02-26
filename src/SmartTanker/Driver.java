@@ -3,6 +3,7 @@ package SmartTanker;
 import uk.ac.nott.cs.g54dia.library.Action;
 import uk.ac.nott.cs.g54dia.library.MoveAction;
 import uk.ac.nott.cs.g54dia.library.Task;
+import uk.ac.nott.cs.g54dia.library.Well;
 
 import java.util.*;
 
@@ -95,10 +96,8 @@ public class Driver {
         int min_distance = 101;
         int distance;
         MemPoint midpoint = null;
-        Iterator it = this.map.well_list.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            MemPoint w_p = (MemPoint) pairs.getKey();
+        for (Map.Entry<MemPoint, Well> pairs : this.map.well_list.entrySet()) {
+            MemPoint w_p = pairs.getKey();
             distance = start.calcDistance(w_p) + w_p.calcDistance(target);
             if (distance < min_distance) {
                 min_distance = distance;
@@ -112,11 +111,9 @@ public class Driver {
         HashMap<Task, MemPoint> task_list = this.ts.scanTaskList();
         plan_list.clear();
 
-        Iterator it = task_list.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            Task t = (Task) pairs.getKey();
-            MemPoint p = (MemPoint) pairs.getValue();
+        for (Map.Entry<Task, MemPoint> pairs : task_list.entrySet()) {
+            Task t = pairs.getKey();
+            MemPoint p = pairs.getValue();
 
             plan_list.push(new TaskPair(p, t));
 
