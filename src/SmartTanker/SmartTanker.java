@@ -20,13 +20,11 @@ public class SmartTanker extends Tanker {
             EXPLORE = 3,
             DRIVE_TO_PUMP = 4,
             DRIVE_TO_FACILITY = 5;
-    int EXPLIM = MAX_FUEL / 2 - VIEW_RANGE - 1;
-    final MemPoint FUEL_PUMP = new MemPoint(0, 0);
+
+    final static MemPoint FUEL_PUMP = new MemPoint(0, 0);
 
     int mode = EXPLORE;
     int mode_prev = -1;
-
-    boolean enough_fuel = false;
 
     MemMap map = new MemMap();
     TaskSys ts = new TaskSys();
@@ -36,11 +34,27 @@ public class SmartTanker extends Tanker {
 
     MemPoint current_point = driver.getCurrentPoint();
     MemPoint target_point = (MemPoint) FUEL_PUMP.clone();
+    MemPoint explore_target_point = (MemPoint) FUEL_PUMP.clone();
+    MemPoint[] explore_targets = {new MemPoint(19, 19),
+                                  new MemPoint(38, 0),
+                                  new MemPoint(19, -19),
+                                  new MemPoint(0, 0),
+                                  new MemPoint(-19, 19),
+                                  new MemPoint(-38, 0),
+                                  new MemPoint(-19, -19),
+                                  new MemPoint(0, 0),
+                                  new MemPoint(-24, 12),
+                                  new MemPoint(0, 38),
+                                  new MemPoint(24, 12),
+                                  new MemPoint(0, 0),
+                                  new MemPoint(24, -12),
+                                  new MemPoint(0, -37),
+                                  new MemPoint(-24, -12),
+                                  new MemPoint(0, 0)};
 
-    int explore_direction = -1;
-    int explore_direction_prev = explore_direction;
-    int water_level = 0;
-    int fuel_level = 0;
+    int explore_count = -1;
+    int water_level = -1;
+    int fuel_level = -1;
     Boolean task_list_empty = true;
     long time_left = DURATION;
 
@@ -53,6 +67,8 @@ public class SmartTanker extends Tanker {
         updateState(view, time_step);
 
         this.mode = arbitrator();
+        checkFuel();
+        System.out.println(this.fuel_level + "\t" + this.mode + "\t" + "(" + this.current_point.x + ", " + this.current_point.y + ")");
 
         switch (this.mode) {
             case EXPLORE:
@@ -61,7 +77,7 @@ public class SmartTanker extends Tanker {
                 act = this.driver.driveTo(this.target_point);
                 break;
             case DRIVE_TO_PUMP:
-                act = this.driver.driveTo(this.FUEL_PUMP);
+                act = this.driver.driveTo(FUEL_PUMP);
                 break;
             case REFUEL:
                 act = new RefuelAction();
@@ -88,17 +104,17 @@ public class SmartTanker extends Tanker {
         this.water_level = this.getWaterLevel();
         this.fuel_level = this.getFuelLevel();
 
-        this.enough_fuel = checkFuel();
-
         this.task_list_empty = this.ts.scanTaskList();
     }
 
-    private boolean checkFuel() {
-        // add extra one fuel for deliver water or refill water
+    private void checkFuel() {
         int cost = this.current_point.calcDistance(this.target_point) +
                 this.target_point.calcDistance(FUEL_PUMP) + 1;
 
-        return cost < this.fuel_level;
+        if (cost >= this.fuel_level &&
+                !(this.current_cell instanceof FuelPump)) {
+            this.mode = DRIVE_TO_PUMP;
+        }
     }
 
     private void recordMap(Cell[][] view) {
@@ -119,26 +135,17 @@ public class SmartTanker extends Tanker {
     }
 
     private void exploreWorld() {
-        /*
-        move alone this routine,
-        -------------
-        start from current point,
-        random choose the direction
-        */
-        Random generator = new Random();
-
-        // start a new explore
-        if (this.explore_direction == -1 ||
-                this.current_point.calcDistance(FUEL_PUMP) > EXPLIM) {
-            do {
-                this.explore_direction = generator.nextInt(8);
-            } while (this.explore_direction == this.explore_direction_prev);
-            this.explore_direction_prev = this.explore_direction;
-        } else {
-            this.explore_direction = this.explore_direction_prev;
+        if (current_point.equals(this.explore_target_point)) {
+            this.explore_count++;
         }
-        this.target_point = (MemPoint) this.current_point.clone();
-        this.target_point.moveTo(this.explore_direction);
+
+        if (this.explore_count > 15) {
+            this.explore_count = 0;
+        }
+
+        this.explore_target_point = this.explore_targets[this.explore_count];
+
+        this.target_point = (MemPoint) this.explore_target_point.clone();
     }
 
     private int arbitrator() {
@@ -152,13 +159,6 @@ public class SmartTanker extends Tanker {
         if (this.current_cell instanceof Well &&
                 this.water_level < MAX_WATER) {
             return LOAD_WATER;
-        }
-
-        // not enough fuel to go back and refill
-        if (!this.enough_fuel &&
-                !(this.current_cell instanceof FuelPump)) {
-            // remain fuel can only go back fuel pump directly and current not at fuel pump
-            return DRIVE_TO_PUMP;
         }
 
         // task list not empty
