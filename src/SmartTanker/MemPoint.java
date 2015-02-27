@@ -7,9 +7,11 @@ import uk.ac.nott.cs.g54dia.library.MoveAction;
  * Created by JasonChen on 2/15/15.
  */
 public class MemPoint implements Cloneable {
+    public final static MemPoint FUEL_PUMP = new MemPoint(0, 0);
+
     volatile int x, y, abs_x, abs_y;
 
-    MemPoint(int x, int y) {
+    public MemPoint(int x, int y) {
         this.x = x;
         this.y = y;
         this.abs_x = Math.abs(x);
@@ -34,6 +36,10 @@ public class MemPoint implements Cloneable {
         int dy = Math.abs(this.y - p2.y);
         // coordinate start from 0
         return dx > dy ? dx : dy;
+    }
+
+    public int calcDistanceToFuel() {
+        return this.calcDistance(FUEL_PUMP);
     }
 
     public void moveTo(int direction) {

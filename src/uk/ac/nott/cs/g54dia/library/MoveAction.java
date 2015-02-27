@@ -68,8 +68,7 @@ public class MoveAction implements Action {
         
         	
         tanker.position = (Point)newPosition.clone();
-        
-        
+
         tanker.useFuel(1);
     }
 
