@@ -33,29 +33,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Generator.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SmartTanker/Planner/Generator.java">
+      <file leaf-file-name="SmartTanker.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/SmartTanker/SmartTanker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="915">
-              <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.75435203" vertical-offset="330" max-vertical-offset="3210">
+              <caret line="52" column="60" selection-start-line="52" selection-start-column="60" selection-end-line="52" selection-end-column="60" />
               <folding>
-                <element signature="e#857#867#0" expanded="true" />
-                <element signature="e#930#940#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Solution.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/SmartTanker/Planner/Solution.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.1025145" vertical-offset="840" max-vertical-offset="1635">
-              <caret line="27" column="32" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
-              <folding>
-                <element signature="docComment;class#Solution#0" expanded="false" />
-                <element signature="e#505#515#0" expanded="true" />
-                <element signature="e#582#592#0" expanded="true" />
-                <element signature="method#initialise#0;class#Solution#0" expanded="false" />
+                <element signature="e#2082#2092#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -98,8 +82,8 @@
         <option value="$PROJECT_DIR$/src/SmartTanker/Planner/Generator.java" />
         <option value="$PROJECT_DIR$/src/SmartTanker/Planner/Solution.java" />
         <option value="$PROJECT_DIR$/src/SmartTanker/TaskSys.java" />
-        <option value="$PROJECT_DIR$/src/SmartTanker/SmartTanker.java" />
         <option value="$PROJECT_DIR$/src/SmartTanker/TaskPair.java" />
+        <option value="$PROJECT_DIR$/src/SmartTanker/SmartTanker.java" />
       </list>
     </option>
   </component>
@@ -185,28 +169,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="SmartTanker" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="G54DIA" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="G54DIA" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SmartTanker" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Planner" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -491,7 +453,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="362" y="23" width="1059" height="825" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -959,27 +921,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SmartTanker/SmartTanker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.041208792" vertical-offset="0" max-vertical-offset="3225">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding>
-            <element signature="e#2082#2092#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SmartTanker/Planner/Generator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="338" max-vertical-offset="960">
-          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
-          <folding>
-            <element signature="e#857#867#0" expanded="true" />
-            <element signature="e#930#940#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/SmartTanker/TaskPair.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18543956" vertical-offset="0" max-vertical-offset="728">
@@ -990,13 +931,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SmartTanker/Planner/Solution.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.1025145" vertical-offset="840" max-vertical-offset="1635">
+        <state vertical-scroll-proportion="0.52224374" vertical-offset="0" max-vertical-offset="1635">
           <caret line="27" column="32" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
           <folding>
             <element signature="docComment;class#Solution#0" expanded="false" />
             <element signature="e#505#515#0" expanded="true" />
             <element signature="e#582#592#0" expanded="true" />
             <element signature="method#initialise#0;class#Solution#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SmartTanker/Planner/Generator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34816247" vertical-offset="0" max-vertical-offset="915">
+          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+          <folding>
+            <element signature="e#857#867#0" expanded="true" />
+            <element signature="e#930#940#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SmartTanker/SmartTanker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.75435203" vertical-offset="330" max-vertical-offset="3210">
+          <caret line="52" column="60" selection-start-line="52" selection-start-column="60" selection-end-line="52" selection-end-column="60" />
+          <folding>
+            <element signature="e#2082#2092#0" expanded="true" />
           </folding>
         </state>
       </provider>

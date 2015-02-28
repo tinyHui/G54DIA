@@ -36,21 +36,21 @@ public class SmartTanker extends Tanker {
 
     int explore_count = -1;
     MemPoint explore_target_point = (MemPoint) MemPoint.FUEL_PUMP.clone();
-    MemPoint[] explore_target_point_list = {new MemPoint(19, 23),
+    MemPoint[] explore_target_point_list = {new MemPoint(19, 25),
                                             new MemPoint(38, 0),
-                                            new MemPoint(19, -23),
+                                            new MemPoint(19, -25),
                                             new MemPoint(0, 0),
-                                            new MemPoint(-19, 23),
+                                            new MemPoint(-19, 25),
                                             new MemPoint(-38, 0),
-                                            new MemPoint(-19, -23),
+                                            new MemPoint(-19, -25),
                                             new MemPoint(0, 0),
-                                            new MemPoint(-23, 19),
+                                            new MemPoint(-25, 19),
                                             new MemPoint(0, 38),
-                                            new MemPoint(23, 19),
+                                            new MemPoint(25, 19),
                                             new MemPoint(0, 0),
-                                            new MemPoint(23, -19),
+                                            new MemPoint(25, -19),
                                             new MemPoint(0, -38),
-                                            new MemPoint(-23, -19),
+                                            new MemPoint(-25, -19),
                                             new MemPoint(0, 0)};
 
     Queue<TaskPair> plan_list = new LinkedList<TaskPair>();
@@ -105,7 +105,7 @@ public class SmartTanker extends Tanker {
 
     private boolean enoughFuel() {
         int cost = this.current_point.calcDistance(this.target_point) +
-                this.target_point.calcDistanceToFuel() + 2;
+                this.target_point.calcDistanceToFuel();
 
         return !(cost > status.fuel_level &&
                 !(this.current_cell instanceof FuelPump));
@@ -191,11 +191,10 @@ public class SmartTanker extends Tanker {
         }
 
         if (command == EXPLORE) {
+            this.target_point = exploreWorld();
             if (!enoughFuel()) {
                 command = DRIVE_TO_PUMP;
             }
-
-            this.target_point = exploreWorld();
             // at fuel pump, gas not max
             if (this.current_cell instanceof FuelPump &&
                     status.fuel_level < MAX_FUEL) {
