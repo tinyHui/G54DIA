@@ -1,6 +1,6 @@
 package SmartTanker;
 
-import SmartTanker.AntColony.ACO;
+import SmartTanker.Planner.Generator;
 import uk.ac.nott.cs.g54dia.library.Action;
 import uk.ac.nott.cs.g54dia.library.MoveAction;
 import uk.ac.nott.cs.g54dia.library.Task;
@@ -64,8 +64,8 @@ public class Driver {
         HashMap<Task, MemPoint> task_list = this.ts.scanTaskList();
         if (this.prev_task_list_size < task_list.size()) {
             // more task append, re-plan
-            ACO aco = new ACO(this.map, this.current_point, status);
-            aco.start(plan_list, task_list);
+            Generator generator = new Generator(this.map, this.current_point, status);
+            generator.start(plan_list, task_list);
             new_plan = true;
         }
         this.prev_task_list_size = task_list.size();

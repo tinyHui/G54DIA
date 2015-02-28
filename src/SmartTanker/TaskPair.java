@@ -23,10 +23,6 @@ public class TaskPair implements Cloneable{
         return this.p == null && this.t == null;
     }
 
-    public boolean isNotNull() {
-        return !(this.p == null && this.t == null);
-    }
-
     public Object clone() {
         return new TaskPair(p,t, f);
     }

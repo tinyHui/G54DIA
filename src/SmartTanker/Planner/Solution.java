@@ -1,4 +1,4 @@
-package SmartTanker.AntColony;
+package SmartTanker.Planner;
 
 import SmartTanker.MemMap;
 import SmartTanker.MemPoint;
@@ -7,17 +7,18 @@ import SmartTanker.TaskPair;
 import uk.ac.nott.cs.g54dia.library.Tanker;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 /**
  * Created by JasonChen on 2/26/15.
  */
 public class Solution {
-    private ArrayList<TaskPair> visit_list = new ArrayList<TaskPair>();
-    private ArrayList<TaskPair> visit_list_plan = new ArrayList<TaskPair>();
+    private final static Double MUTATE_RATE = 0.3;
 
-    private Random rand = new Random();
+    private ArrayList<TaskPair> visit_list = new ArrayList<TaskPair>();
+
+    private ArrayList<TaskPair> visit_list_plan = new ArrayList<TaskPair>();
+    private Random rand = new Random(System.currentTimeMillis());
 
     private MemMap map;
     private int water_level = -1;
@@ -37,6 +38,43 @@ public class Solution {
         this.delivered_water = status.delivered_water;
         this.fuel_level = status.fuel_level;
         this.map = map;
+    }
+
+    public void initialise(MemPoint current_point) {
+        ArrayList<TaskPair> visit_list_copy = (ArrayList<TaskPair>) this.visit_list.clone();
+        int size = visit_list_copy.size();
+        int current_size = size;
+        this.visit_list.clear();
+
+        TaskPair current_pair = null;
+        for (int i = 0; i < size; i++) {
+            if (rand.nextDouble() > MUTATE_RATE) {
+                // not mutate, find the nearest one
+                int min_distance = 10000000;
+                int min_index = 0;
+                int index = 0;
+                for (TaskPair tp : visit_list_copy) {
+                    int distance = current_point.calcDistance(tp.p);
+                    if (distance < min_distance) {
+                        current_pair = tp;
+                        min_distance = distance;
+                        min_index = index;
+                    }
+                    index++;
+                }
+                visit_list_copy.remove(min_index);
+                current_size--;
+            } else {
+                int index = this.rand.nextInt(current_size);
+                current_pair = visit_list_copy.get(index);
+                visit_list_copy.remove(index);
+                current_size--;
+            }
+            this.visit_list.add(current_pair);
+            current_point = (MemPoint) current_pair.p.clone();
+        }
+
+
     }
 
     private MemPoint checkFuel(MemPoint current_point, MemPoint target_point) {
@@ -69,8 +107,6 @@ public class Solution {
     }
 
     public void generate(MemPoint current_point) {
-        Collections.shuffle(this.visit_list);
-
         for (TaskPair tp : this.visit_list) {
             MemPoint target_point;
 
@@ -107,7 +143,6 @@ public class Solution {
             this.delivered_water += tp.t.getRequired();
             this.score = (long)this.completed_count * (long)this.delivered_water;
         }
-        this.visit_list_plan.add(new TaskPair(MemPoint.FUEL_PUMP, null, this.fuel_level));
     }
 
     public long getScore() {

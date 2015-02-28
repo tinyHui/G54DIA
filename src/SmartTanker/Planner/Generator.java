@@ -1,4 +1,4 @@
-package SmartTanker.AntColony;
+package SmartTanker.Planner;
 
 import SmartTanker.*;
 import uk.ac.nott.cs.g54dia.library.Task;
@@ -8,14 +8,14 @@ import java.util.*;
 /**
  * Created by JasonChen on 2/26/15.
  */
-public class ACO {
-    final static int ANT_MAX = 50;
+public class Generator {
+    final static int RETRY_MAX = 60;
 
     private MemMap map;
     private MemPoint current_point;
     private Status status;
 
-    public ACO(MemMap map, MemPoint current_point, Status status) {
+    public Generator(MemMap map, MemPoint current_point, Status status) {
         this.map = map;
         this.current_point = current_point;
         this.status = status;
@@ -34,10 +34,11 @@ public class ACO {
         }
 
         // place ants
-        for (int i = 0; i < ANT_MAX; i++) {
+        for (int i = 0; i < RETRY_MAX; i++) {
             // generate a new solution
             Solution s = new Solution(visit_list, this.map, this.status);
-            s.generate(current_point);
+            s.initialise(this.current_point);
+            s.generate(this.current_point);
             if (s.getScore() > best_score) {
                 best_score = s.getScore();
                 best_visit_list = s.getVisitList();
