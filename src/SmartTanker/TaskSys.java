@@ -1,6 +1,5 @@
 package SmartTanker;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import uk.ac.nott.cs.g54dia.library.Station;
 import uk.ac.nott.cs.g54dia.library.Task;
 
@@ -12,7 +11,7 @@ import java.util.Map;
  * Created by JasonChen on 2/16/15.
  */
 public class TaskSys {
-    private HashMap<Task, MemPoint> task_list = new HashMap<Task, MemPoint>();
+    HashMap<Task, MemPoint> task_list = new HashMap<Task, MemPoint>();
 
     public HashMap<Task, MemPoint> scanTaskList() {
         Iterator it = this.task_list.entrySet().iterator();

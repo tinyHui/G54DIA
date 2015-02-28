@@ -8,15 +8,13 @@ import uk.ac.nott.cs.g54dia.library.Task;
 public class TaskPair implements Cloneable{
     public MemPoint p;
     public Task t;
-    public int f;
 
     public TaskPair() {
     }
 
-    public TaskPair(MemPoint p, Task t, int f) {
+    public TaskPair(MemPoint p, Task t) {
         this.p = (MemPoint) p.clone();
         this.t = t;
-        this.f = f;
     }
 
     public boolean isNull() {
@@ -24,6 +22,6 @@ public class TaskPair implements Cloneable{
     }
 
     public Object clone() {
-        return new TaskPair(p,t, f);
+        return new TaskPair(p,t);
     }
 }

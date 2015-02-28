@@ -11,7 +11,6 @@ import java.util.Queue;
  */
 
 public class SmartTanker extends Tanker {
-    final static int DURATION = 10 * 10000;
     final static int
             // action mode
             REFUEL = 0,
@@ -92,7 +91,6 @@ public class SmartTanker extends Tanker {
     }
 
     private void updateState(Cell[][] view, long time_step) {
-        status.time_left = DURATION - time_step;
         this.current_point = this.driver.getCurrentPoint();
         this.current_cell = this.getCurrentCell(view);
         status.water_level = this.getWaterLevel();
@@ -159,10 +157,6 @@ public class SmartTanker extends Tanker {
             // no plan occupied, try to read a new one
             if (this.current_task_pair.isNull()) {
                 this.current_task_pair = nextPlanPoint();
-                if (this.status.fuel_level != this.current_task_pair.f &&
-                        this.mode != REFUEL) {
-                    System.out.println("Wrong");
-                }
                 System.out.println("\t\tRemain: " + this.plan_list.size());
                 System.out.println("\t\t\ttarget: " + this.current_task_pair.p.x + ", " + this.current_task_pair.p.y);
             }

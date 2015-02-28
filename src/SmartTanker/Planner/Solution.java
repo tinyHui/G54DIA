@@ -13,23 +13,20 @@ import java.util.Random;
  * Created by JasonChen on 2/26/15.
  */
 public class Solution {
-    private final static Double MUTATE_RATE = 0.3;
+    private final static Double MUTATE_RATE = 0.5;
+    private final static TaskPair FUEL_PAIR = new TaskPair(MemPoint.FUEL_PUMP, null);
 
     private ArrayList<TaskPair> visit_list = new ArrayList<TaskPair>();
-
     private ArrayList<TaskPair> visit_list_plan = new ArrayList<TaskPair>();
-    private Random rand = new Random(System.currentTimeMillis());
 
+    private Random rand = new Random(System.currentTimeMillis());
     private MemMap map;
     private int water_level = -1;
     private int completed_count = 0;
     private int delivered_water = 0;
     private int fuel_level;
     private long time_spend = 0;
-
     private long score = 0;
-
-//    private static TaskPair go_fuel = new TaskPair(MemPoint.FUEL_PUMP, null);
 
     public Solution(ArrayList<TaskPair> visit_list, MemMap map, Status status) {
         this.visit_list = (ArrayList<TaskPair>) visit_list.clone();
@@ -78,7 +75,6 @@ public class Solution {
     }
 
     private MemPoint checkFuel(MemPoint current_point, MemPoint target_point) {
-        MemPoint cp = target_point;
         int distance_c_t = current_point.calcDistance(target_point);
         int distance_f_t = MemPoint.FUEL_PUMP.calcDistance(target_point);
         int cost = distance_c_t + target_point.calcDistanceToFuel();
@@ -88,9 +84,9 @@ public class Solution {
             int size = this.visit_list_plan.size();
             if (size == 0) {
                 // none of the point been added, but not enough fuel
-                this.visit_list_plan.add(new TaskPair(MemPoint.FUEL_PUMP, null, this.fuel_level));
+                this.visit_list_plan.add(FUEL_PAIR);
             } else {
-                this.visit_list_plan.add(size - 1, new TaskPair(MemPoint.FUEL_PUMP, null, this.fuel_level));
+                this.visit_list_plan.add(size - 1, FUEL_PAIR);
             }
             // fuel level max
             this.fuel_level = Tanker.MAX_FUEL - distance_f_t;
@@ -103,7 +99,7 @@ public class Solution {
         }
         this.time_spend++;
 
-        return (MemPoint) cp.clone();
+        return (MemPoint) target_point.clone();
     }
 
     public void generate(MemPoint current_point) {
@@ -121,7 +117,7 @@ public class Solution {
                     well = (MemPoint) well.clone();
                 }
                 // go well
-                this.visit_list_plan.add(new TaskPair(well, null, this.fuel_level));
+                this.visit_list_plan.add(new TaskPair(well, null));
                 // target p is well
                 target_point = well;
                 // check fuel and update current p
@@ -131,7 +127,7 @@ public class Solution {
             }
 
             // finish task
-            this.visit_list_plan.add(new TaskPair(tp.p, tp.t, this.fuel_level));
+            this.visit_list_plan.add(new TaskPair(tp.p, tp.t));
             // update water level
             this.water_level -= tp.t.getRequired();
             // target p is station

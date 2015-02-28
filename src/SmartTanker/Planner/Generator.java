@@ -1,9 +1,15 @@
 package SmartTanker.Planner;
 
-import SmartTanker.*;
+import SmartTanker.MemMap;
+import SmartTanker.MemPoint;
+import SmartTanker.Status;
+import SmartTanker.TaskPair;
 import uk.ac.nott.cs.g54dia.library.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
 
 /**
  * Created by JasonChen on 2/26/15.
@@ -30,7 +36,7 @@ public class Generator {
         for (Map.Entry<Task, MemPoint> pairs : tl.entrySet()) {
             Task t = pairs.getKey();
             MemPoint p = pairs.getValue();
-            visit_list.add(new TaskPair(p, t, 0));
+            visit_list.add(new TaskPair(p, t));
         }
 
         // place ants
@@ -45,9 +51,7 @@ public class Generator {
             }
         }
 
-        if (best_visit_list.size() == 0) {
-            System.out.println("Wrong");
-        }
+
         System.out.println("Generate: " + best_visit_list.size());
 
         plan_list.clear();
