@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * Created by JasonChen on 2/26/15.
  */
-public class Solution {
+public class Simulator {
     private final static Double MUTATE_RATE = 0.5;
     private final static TaskPair FUEL_PAIR = new TaskPair(MemPoint.FUEL_PUMP, null);
 
@@ -28,7 +28,7 @@ public class Solution {
     private long time_spend = 0;
     private long score = 0;
 
-    public Solution(ArrayList<TaskPair> visit_list, MemMap map, Status status) {
+    public Simulator(ArrayList<TaskPair> visit_list, MemMap map, Status status) {
         this.visit_list = (ArrayList<TaskPair>) visit_list.clone();
         this.water_level = status.water_level;
         this.completed_count = status.completed_count;

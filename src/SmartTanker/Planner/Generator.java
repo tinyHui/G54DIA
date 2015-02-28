@@ -42,7 +42,7 @@ public class Generator {
         // place ants
         for (int i = 0; i < RETRY_MAX; i++) {
             // generate a new solution
-            Solution s = new Solution(visit_list, this.map, this.status);
+            Simulator s = new Simulator(visit_list, this.map, this.status);
             s.initialise(this.current_point);
             s.generate(this.current_point);
             if (s.getScore() > best_score) {
