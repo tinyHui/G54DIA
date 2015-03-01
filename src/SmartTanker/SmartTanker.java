@@ -190,9 +190,7 @@ public class SmartTanker extends Tanker {
                     }
                 }
             }
-        }
-
-        if (command == EXPLORE) {
+        } else {
             this.target_point = exploreWorld();
             if (!enoughFuel()) {
                 command = DRIVE_TO_PUMP;

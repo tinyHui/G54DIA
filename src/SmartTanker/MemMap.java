@@ -13,7 +13,6 @@ import java.util.Map;
  * Created by JasonChen on 2/15/15.
  */
 public class MemMap {
-
     int MAX_RANGE = 50;
     Map<MemPoint, Station> station_list = new HashMap<MemPoint, Station>();
     Map<MemPoint, Well> well_list = new HashMap<MemPoint, Well>();
