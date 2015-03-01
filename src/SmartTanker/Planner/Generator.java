@@ -15,7 +15,7 @@ import java.util.Queue;
  * Created by JasonChen on 2/26/15.
  */
 public class Generator {
-    final static int RETRY_MAX = 60;
+    final static int RETRY_MAX = 50;
 
     private MemMap map;
     private MemPoint current_point;
@@ -43,7 +43,6 @@ public class Generator {
         for (int i = 0; i < RETRY_MAX; i++) {
             // generate a new solution
             Simulator s = new Simulator(visit_list, this.map, this.status);
-            s.initialise(this.current_point);
             s.generate(this.current_point);
             if (s.getScore() > best_score) {
                 best_score = s.getScore();

@@ -96,10 +96,12 @@ public class SmartTanker extends Tanker {
         status.water_level = this.getWaterLevel();
         status.fuel_level = this.getFuelLevel();
         status.completed_count = this.getCompletedCount();
-        boolean new_plan = this.driver.plan(this.plan_list, this.status);
-        if (new_plan) {
-            // plan updated, abort current target
-            this.current_task_pair = new TaskPair();
+        if (this.map.well_list.size() > 0) {
+            boolean new_plan = this.driver.plan(this.plan_list, this.status);
+            if (new_plan) {
+                // plan updated, abort current target
+                this.current_task_pair = new TaskPair();
+            }
         }
     }
 

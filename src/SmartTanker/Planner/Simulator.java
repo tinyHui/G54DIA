@@ -13,7 +13,7 @@ import java.util.Random;
  * Created by JasonChen on 2/26/15.
  */
 public class Simulator {
-    private final static Double MUTATE_RATE = 0.5;
+    private final static Double ESCAPE_RATE = 0.5;
     private final static TaskPair FUEL_PAIR = new TaskPair(MemPoint.FUEL_PUMP, null);
 
     private ArrayList<TaskPair> visit_list = new ArrayList<TaskPair>();
@@ -35,43 +35,6 @@ public class Simulator {
         this.delivered_water = status.delivered_water;
         this.fuel_level = status.fuel_level;
         this.map = map;
-    }
-
-    public void initialise(MemPoint current_point) {
-        ArrayList<TaskPair> visit_list_copy = (ArrayList<TaskPair>) this.visit_list.clone();
-        int size = visit_list_copy.size();
-        int current_size = size;
-        this.visit_list.clear();
-
-        TaskPair current_pair = null;
-        for (int i = 0; i < size; i++) {
-            if (rand.nextDouble() > MUTATE_RATE) {
-                // not mutate, find the nearest one
-                int min_distance = 10000000;
-                int min_index = 0;
-                int index = 0;
-                for (TaskPair tp : visit_list_copy) {
-                    int distance = current_point.calcDistance(tp.p);
-                    if (distance < min_distance) {
-                        current_pair = tp;
-                        min_distance = distance;
-                        min_index = index;
-                    }
-                    index++;
-                }
-                visit_list_copy.remove(min_index);
-                current_size--;
-            } else {
-                int index = this.rand.nextInt(current_size);
-                current_pair = visit_list_copy.get(index);
-                visit_list_copy.remove(index);
-                current_size--;
-            }
-            this.visit_list.add(current_pair);
-            current_point = (MemPoint) current_pair.p.clone();
-        }
-
-
     }
 
     private MemPoint checkFuel(MemPoint current_point, MemPoint target_point) {
@@ -103,19 +66,48 @@ public class Simulator {
     }
 
     public void generate(MemPoint current_point) {
-        for (TaskPair tp : this.visit_list) {
+        int size = visit_list.size();
+        int current_size = size;
+
+        TaskPair current_pair = new TaskPair();
+        for (int i = 0; i < size; i++) {
             MemPoint target_point;
 
-            if (tp.t.getRequired() > this.water_level) {
-                // not enough water
-                MemPoint well = this.map.getMidWell(current_point, tp.p);
-                if (well == null) {
-                    // not enough explore
-                    this.visit_list_plan.clear();
-                    break;
-                } else {
-                    well = (MemPoint) well.clone();
+            if (rand.nextDouble() > ESCAPE_RATE) {
+                // not mutate, find the nearest one
+                int min_cost = 10000000;
+                int min_index = 0;
+                int index = 0;
+                for (TaskPair tp : visit_list) {
+                    int cost = 0;
+                    int distance = tp.p.calcDistanceToFuel();
+                    if (tp.t.getRequired() > this.water_level) {
+                        MemPoint well = this.map.getMidWell(current_point, current_pair.p);
+                        distance += current_point.calcDistance(well) + well.calcDistance(tp.p);
+                    } else {
+                        distance = current_point.calcDistance(tp.p);
+                    }
+                    cost = distance + tp.t.getRequired();
+
+                    if (cost < min_cost) {
+                        current_pair = tp;
+                        min_cost = cost;
+                        min_index = index;
+                    }
+                    index++;
                 }
+                visit_list.remove(min_index);
+                current_size--;
+            } else {
+                int index = this.rand.nextInt(current_size);
+                current_pair = visit_list.get(index);
+                visit_list.remove(index);
+                current_size--;
+            }
+
+            if (current_pair.t.getRequired() > this.water_level) {
+                // not enough water
+                MemPoint well = this.map.getMidWell(current_point, current_pair.p);
                 // go well
                 this.visit_list_plan.add(new TaskPair(well, null));
                 // target p is well
@@ -127,16 +119,16 @@ public class Simulator {
             }
 
             // finish task
-            this.visit_list_plan.add(new TaskPair(tp.p, tp.t));
+            this.visit_list_plan.add(new TaskPair(current_pair.p, current_pair.t));
             // update water level
-            this.water_level -= tp.t.getRequired();
+            this.water_level -= current_pair.t.getRequired();
             // target p is station
-            target_point = (MemPoint) tp.p.clone();
+            target_point = (MemPoint) current_pair.p.clone();
             // check fuel
             current_point = checkFuel(current_point, target_point);
             // update score
             this.completed_count++;
-            this.delivered_water += tp.t.getRequired();
+            this.delivered_water += current_pair.t.getRequired();
             this.score = (long)this.completed_count * (long)this.delivered_water;
         }
     }
