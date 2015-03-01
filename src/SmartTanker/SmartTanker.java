@@ -159,8 +159,8 @@ public class SmartTanker extends Tanker {
             // no plan occupied, try to read a new one
             if (this.current_task_pair.isNull()) {
                 this.current_task_pair = nextPlanPoint();
-                System.out.println("\t\tRemain: " + this.plan_list.size());
-                System.out.println("\t\t\ttarget: " + this.current_task_pair.p.x + ", " + this.current_task_pair.p.y);
+                System.out.println("\tRemain: " + this.plan_list.size());
+                System.out.println("\t\ttarget: " + this.current_task_pair.p.x + ", " + this.current_task_pair.p.y);
             }
 
             // have plan occupied

@@ -15,7 +15,7 @@ import java.util.Queue;
  * Created by JasonChen on 2/26/15.
  */
 public class Generator {
-    final static int RETRY_MAX = 50;
+    final static int RETRY_MAX = 60;
 
     private MemMap map;
     private MemPoint current_point;
@@ -57,7 +57,5 @@ public class Generator {
         for (TaskPair t : best_visit_list) {
             plan_list.add(t);
         }
-
-        System.out.println("\tAfter add: " + best_visit_list.size());
     }
 }

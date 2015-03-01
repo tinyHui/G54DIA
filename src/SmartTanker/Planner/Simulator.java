@@ -14,6 +14,7 @@ import java.util.Random;
  */
 public class Simulator {
     private final static Double ESCAPE_RATE = 0.5;
+    private final static Double DIST_TO_PUMP_RATE = 0.5;
     private final static TaskPair FUEL_PAIR = new TaskPair(MemPoint.FUEL_PUMP, null);
 
     private ArrayList<TaskPair> visit_list = new ArrayList<TaskPair>();
@@ -79,8 +80,9 @@ public class Simulator {
                 int min_index = 0;
                 int index = 0;
                 for (TaskPair tp : visit_list) {
-                    int cost = 0;
-                    int distance = tp.p.calcDistanceToFuel();
+                    int cost;
+                    int distance = (int) Math.floor(Math.abs(tp.p.calcDistanceToFuel() -
+                            current_point.calcDistanceToFuel()) * DIST_TO_PUMP_RATE);
                     if (tp.t.getRequired() > this.water_level) {
                         MemPoint well = this.map.getMidWell(current_point, current_pair.p);
                         distance += current_point.calcDistance(well) + well.calcDistance(tp.p);
