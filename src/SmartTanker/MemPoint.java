@@ -9,13 +9,11 @@ import uk.ac.nott.cs.g54dia.library.MoveAction;
 public class MemPoint implements Cloneable {
     public final static MemPoint FUEL_PUMP = new MemPoint(0, 0);
 
-    volatile int x, y, abs_x, abs_y;
+    volatile int x, y;
 
     public MemPoint(int x, int y) {
         this.x = x;
         this.y = y;
-        this.abs_x = Math.abs(x);
-        this.abs_y = Math.abs(y);
     }
 
     public boolean equals(Object o) {
