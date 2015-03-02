@@ -1,11 +1,12 @@
-package SmartTanker;
+package SmartTanker.Planner;
 
+import SmartTanker.MemPoint;
 import uk.ac.nott.cs.g54dia.library.Task;
 
 /**
  * Created by JasonChen on 2/25/15.
  */
-public class TaskPair implements Cloneable{
+public class TaskPair implements Cloneable {
     public MemPoint p;
     public Task t;
 

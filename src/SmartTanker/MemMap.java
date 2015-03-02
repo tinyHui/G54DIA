@@ -13,63 +13,59 @@ import java.util.Map;
  * Created by JasonChen on 2/15/15.
  */
 public class MemMap {
-    int MAX_RANGE = 50;
-    Map<MemPoint, Station> station_list = new HashMap<MemPoint, Station>();
-    Map<MemPoint, Well> well_list = new HashMap<MemPoint, Well>();
+    public Map<MemPoint, Station> station_list = new HashMap<MemPoint, Station>();
+    public Map<MemPoint, Well> well_list = new HashMap<MemPoint, Well>();
 
     public void appendStation(MemPoint p, Station s) {
-        // deliver water takes one time step, cost one fuel
-        if (p.calcDistanceToFuel() <= MAX_RANGE) {
-            Iterator it = station_list.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it.next();
-                MemPoint p_r = (MemPoint) pairs.getKey();
-                if (p_r.equals(p)) {
-                    it.remove();
-                }
+        // append
+        Iterator it = station_list.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry) it.next();
+            MemPoint p_r = (MemPoint) pairs.getKey();
+            if (p_r.equals(p)) {
+                it.remove();
             }
-            this.station_list.put(p, s);
         }
+        this.station_list.put(p, s);
     }
 
     public void appendWell(MemPoint p, Well w) {
-        // fill water takes one time step, cost one fuel
-        if (p.calcDistanceToFuel() <= MAX_RANGE) {
-            Iterator it = this.station_list.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it.next();
-                MemPoint p_r = (MemPoint) pairs.getKey();
-                if (p_r.equals(p)) {
-                    it.remove();
-                }
+        // append
+        Iterator it = this.station_list.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry) it.next();
+            MemPoint p_r = (MemPoint) pairs.getKey();
+            if (p_r.equals(p)) {
+                it.remove();
             }
-            this.well_list.put((MemPoint) p.clone(), w);
         }
+        this.well_list.put((MemPoint) p.clone(), w);
     }
 
-    public Cell getCell(MemPoint p) {
-        if (p != null) {
-            Iterator it_s = this.station_list.entrySet().iterator();
-            while (it_s.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it_s.next();
-                MemPoint p_r = (MemPoint) pairs.getKey();
-                if (p_r.x == p.x && p_r.y == p.y) {
-                    return (Cell) pairs.getValue();
-                }
-            }
-
-            Iterator it_w = this.well_list.entrySet().iterator();
-            while (it_w.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it_w.next();
-                MemPoint p_r = (MemPoint) pairs.getKey();
-                if (p_r.x == p.x && p_r.y == p.y) {
-                    return (Cell) pairs.getValue();
-                }
-            }
-            return null;
-        }
-        throw new ValueException("Can'current_task find for a null point");
-    }
+//    public Cell getCell(MemPoint p) {
+//        if (p != null) {
+//            Iterator it_s = this.station_list.entrySet().iterator();
+//            while (it_s.hasNext()) {
+//                Map.Entry pairs = (Map.Entry) it_s.next();
+//                MemPoint p_r = (MemPoint) pairs.getKey();
+//                if (p_r.x == p.x && p_r.y == p.y) {
+//                    return (Cell) pairs.getValue();
+//                }
+//            }
+//
+//            Iterator it_w = this.well_list.entrySet().iterator();
+//            while (it_w.hasNext()) {
+//                Map.Entry pairs = (Map.Entry) it_w.next();
+//                MemPoint p_r = (MemPoint) pairs.getKey();
+//                if (p_r.x == p.x && p_r.y == p.y) {
+//                    return (Cell) pairs.getValue();
+//                }
+//            }
+//            // empty cell or not been recorded
+//            return null;
+//        }
+//        throw new ValueException("Can't find cell by a null point");
+//    }
 
     public MemPoint getMidWell(MemPoint start, MemPoint target) {
         // found best well to go

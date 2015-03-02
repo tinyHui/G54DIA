@@ -3,7 +3,6 @@ package SmartTanker.Planner;
 import SmartTanker.MemMap;
 import SmartTanker.MemPoint;
 import SmartTanker.Status;
-import SmartTanker.TaskPair;
 import uk.ac.nott.cs.g54dia.library.Tanker;
 
 import java.util.ArrayList;
@@ -13,8 +12,8 @@ import java.util.Random;
  * Created by JasonChen on 2/26/15.
  */
 public class Simulator {
-    private final static Double ESCAPE_RATE = 0.3;
-    private final static Double DIST_TO_PUMP_RATE = 0.8;
+    private final static Double ESCAPE_RATE = 0.5;
+    private final static Double DIST_TO_PUMP_RATE = 0.6;
     private final static TaskPair FUEL_PAIR = new TaskPair(MemPoint.FUEL_PUMP, null);
 
     private ArrayList<TaskPair> visit_list = new ArrayList<TaskPair>();
@@ -26,6 +25,7 @@ public class Simulator {
     private int completed_count = 0;
     private int delivered_water = 0;
     private int fuel_level;
+    private long time_remain = 0;
     private long time_spend = 0;
     private long score = 0;
 
@@ -35,6 +35,7 @@ public class Simulator {
         this.completed_count = status.completed_count;
         this.delivered_water = status.delivered_water;
         this.fuel_level = status.fuel_level;
+        this.time_remain = status.time_remain;
         this.map = map;
     }
 
@@ -62,16 +63,14 @@ public class Simulator {
             this.time_spend += distance_c_t;
         }
         this.time_spend++;
+        this.time_remain -= this.time_spend;
 
         return (MemPoint) target_point.clone();
     }
 
     public void generate(MemPoint current_point) {
-        int size = visit_list.size();
-        int current_size = size;
-
         TaskPair current_pair = new TaskPair();
-        for (int i = 0; i < size; i++) {
+        while (visit_list.size() > 0) {
             MemPoint target_point;
 
             if (rand.nextDouble() > ESCAPE_RATE) {
@@ -85,12 +84,12 @@ public class Simulator {
                             current_point.calcDistanceToFuel()) * DIST_TO_PUMP_RATE);
                     // add well distance if not enough water
                     if (tp.t.getRequired() > this.water_level) {
-                        MemPoint well = this.map.getMidWell(current_point, current_pair.p);
+                        MemPoint well = this.map.getMidWell(current_point, tp.p);
                         distance += current_point.calcDistance(well) + well.calcDistance(tp.p);
                     } else {
                         distance = current_point.calcDistance(tp.p);
                     }
-                    cost = distance + tp.t.getRequired();
+                    cost = distance - tp.t.getRequired();
 
                     if (cost < min_cost) {
                         current_pair = tp;
@@ -100,13 +99,11 @@ public class Simulator {
                     index++;
                 }
                 visit_list.remove(min_index);
-                current_size--;
             } else {
                 // mutate, random find one
-                int index = this.rand.nextInt(current_size);
+                int index = this.rand.nextInt(visit_list.size());
                 current_pair = visit_list.get(index);
                 visit_list.remove(index);
-                current_size--;
             }
 
             if (current_pair.t.getRequired() > this.water_level) {

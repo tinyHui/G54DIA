@@ -3,7 +3,6 @@ package SmartTanker.Planner;
 import SmartTanker.MemMap;
 import SmartTanker.MemPoint;
 import SmartTanker.Status;
-import SmartTanker.TaskPair;
 import uk.ac.nott.cs.g54dia.library.Task;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.Queue;
  * Created by JasonChen on 2/26/15.
  */
 public class Generator {
-    final static int RETRY_MAX = 60;
+    final static int RETRY_MAX = 100;
 
     private MemMap map;
     private MemPoint current_point;
@@ -39,7 +38,7 @@ public class Generator {
             visit_list.add(new TaskPair(p, t));
         }
 
-        // place ants
+        // retry to get best
         for (int i = 0; i < RETRY_MAX; i++) {
             // generate a new solution
             Simulator s = new Simulator(visit_list, this.map, this.status);
@@ -49,7 +48,6 @@ public class Generator {
                 best_visit_list = s.getVisitList();
             }
         }
-
 
         System.out.println("Generate: " + best_visit_list.size());
 

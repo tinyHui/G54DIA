@@ -1,6 +1,7 @@
 package SmartTanker;
 
 import SmartTanker.Planner.Generator;
+import SmartTanker.Planner.TaskPair;
 import uk.ac.nott.cs.g54dia.library.Action;
 import uk.ac.nott.cs.g54dia.library.MoveAction;
 import uk.ac.nott.cs.g54dia.library.Task;
@@ -12,7 +13,7 @@ import java.util.Queue;
  * Created by JasonChen on 2/15/15.
  */
 public class Driver {
-    MemPoint current_point = new MemPoint(0, 0);
+    MemPoint current_point = (MemPoint) MemPoint.FUEL_PUMP.clone();
     MemMap map;
     TaskSys ts;
     int prev_task_list_size = 0;

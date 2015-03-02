@@ -28,7 +28,7 @@ public class MemPoint implements Cloneable {
 
     public int calcDistance(MemPoint p2) {
         if (p2 == null) {
-            return 0;
+            return 101;
         }
         int dx = Math.abs(this.x - p2.x);
         int dy = Math.abs(this.y - p2.y);
