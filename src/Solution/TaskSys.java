@@ -1,4 +1,4 @@
-package SmartTanker;
+package Solution;
 
 import uk.ac.nott.cs.g54dia.library.Cell;
 import uk.ac.nott.cs.g54dia.library.Station;

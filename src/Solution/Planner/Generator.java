@@ -1,8 +1,8 @@
-package SmartTanker.Planner;
+package Solution.Planner;
 
-import SmartTanker.MemMap;
-import SmartTanker.MemPoint;
-import SmartTanker.Status;
+import Solution.MemMap;
+import Solution.MemPoint;
+import Solution.Status;
 import uk.ac.nott.cs.g54dia.library.Task;
 
 import java.util.ArrayList;

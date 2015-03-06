@@ -1,4 +1,4 @@
-package SmartTanker;
+package Solution;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import uk.ac.nott.cs.g54dia.library.MoveAction;

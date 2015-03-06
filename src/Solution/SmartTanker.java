@@ -1,6 +1,6 @@
-package SmartTanker;
+package Solution;
 
-import SmartTanker.Planner.TaskPair;
+import Solution.Planner.TaskPair;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import uk.ac.nott.cs.g54dia.library.*;
 

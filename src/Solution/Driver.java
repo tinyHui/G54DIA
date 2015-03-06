@@ -1,7 +1,7 @@
-package SmartTanker;
+package Solution;
 
-import SmartTanker.Planner.Generator;
-import SmartTanker.Planner.TaskPair;
+import Solution.Planner.Generator;
+import Solution.Planner.TaskPair;
 import uk.ac.nott.cs.g54dia.library.Action;
 import uk.ac.nott.cs.g54dia.library.MoveAction;
 import uk.ac.nott.cs.g54dia.library.Task;
