@@ -1,2 +1,2 @@
 # G54DIA
-G54DIA coursework
+G54DIA coursework, single agent
